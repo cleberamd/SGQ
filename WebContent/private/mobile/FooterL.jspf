@@ -1,0 +1,14 @@
+<div data-role="footer" data-position="fixed" class="ui-bar"
+	data-theme="b">
+	<div data-role="navbar">
+		<ul>
+			<li><a href="UsuarioController?action=sair"
+				class="ui-btn ui-corner-all ui-icon-power ui-btn-icon-notext">Sair</a></li>
+			<li><a href=""><h1>(67)3041-1766</h1></a></li>
+			<li></li>
+		</ul>
+
+	</div>
+
+
+</div>

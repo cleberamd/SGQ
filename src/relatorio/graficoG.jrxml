@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.2.0.final using JasperReports Library version 6.2.0  -->
+<!-- 2016-02-09T05:43:25 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="graficoG" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ced95029-b569-4027-895c-af2843a4e088">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="postgres_BDE"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true"/>
+	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
+	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
+	<style name="Detail" fontName="Arial" fontSize="12"/>
+	<style name="Row" mode="Transparent">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
+			<style backcolor="#E6DAC3"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="dinicio" class="java.sql.Date"/>
+	<parameter name="dfinal" class="java.sql.Date"/>
+	<queryString>
+		<![CDATA[SELECT 
+   
+  count( CASE pitem.conformidade
+     when 0 then 'não conforme'
+
+end) as naoconforme,
+   count(CASE pitem.conformidade
+    when 2 then 'conforme com revisão'
+   end )as conformecomrevisao,
+   
+count(CASE pitem.conformidade
+    when 1 then 'conforme'  
+    end ) as conforme,
+
+  ris.nome,  
+  obra.nome,
+  obra.codcolig
+FROM 
+  pitem 
+  inner join itens on itens.id = pitem.itens_id
+  inner join obra on obra.id = pitem.obraid
+  inner join ris on ris.id = itens.ris_id
+  where pitem.data >=  $P{dinicio}  and pitem.data <=  $P{dfinal} 
+  group by ris.nome, obra.nome,  obra.codcolig]]>
+	</queryString>
+	<field name="naoconforme" class="java.lang.Long"/>
+	<field name="conformecomrevisao" class="java.lang.Long"/>
+	<field name="conforme" class="java.lang.Long"/>
+	<field name="nome" class="java.lang.String"/>
+	<field name="COLUMN_5" class="java.lang.String"/>
+	<field name="codcolig" class="java.lang.Integer"/>
+	<group name="Group1">
+		<groupExpression><![CDATA[$F{codcolig}]]></groupExpression>
+		<groupHeader>
+			<band height="31">
+				<frame>
+					<reportElement mode="Opaque" x="-20" y="1" width="843" height="24" forecolor="#B89F7D" backcolor="#F2EBDF" uuid="df26104b-a7fc-458f-8a21-50b13c7c7736"/>
+					<rectangle>
+						<reportElement mode="Opaque" x="21" y="0" width="36" height="24" backcolor="#736343" uuid="369745f3-8095-4b8b-8b7a-38e42b7aef67"/>
+						<graphicElement>
+							<pen lineWidth="0.0"/>
+						</graphicElement>
+					</rectangle>
+				</frame>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="347">
+				<bar3DChart>
+					<chart evaluationTime="Report">
+						<reportElement x="0" y="10" width="802" height="330" uuid="7c5b37d8-5e2e-4230-9014-4b8b840af54b"/>
+						<chartTitle/>
+						<chartSubtitle/>
+						<chartLegend/>
+					</chart>
+					<categoryDataset>
+						<dataset incrementType="Report"/>
+						<categorySeries>
+							<seriesExpression><![CDATA[$F{naoconforme}]]></seriesExpression>
+							<categoryExpression><![CDATA[$F{naoconforme}+" não conforme"]]></categoryExpression>
+							<valueExpression><![CDATA[$F{naoconforme}]]></valueExpression>
+						</categorySeries>
+						<categorySeries>
+							<seriesExpression><![CDATA[$F{conformecomrevisao}]]></seriesExpression>
+							<categoryExpression><![CDATA[$F{conformecomrevisao}+" conforme após revisão"]]></categoryExpression>
+							<valueExpression><![CDATA[$F{conformecomrevisao}]]></valueExpression>
+						</categorySeries>
+						<categorySeries>
+							<seriesExpression><![CDATA[$F{conforme}]]></seriesExpression>
+							<categoryExpression><![CDATA[$F{conforme}+" conforme"]]></categoryExpression>
+							<valueExpression><![CDATA[$F{conforme}]]></valueExpression>
+						</categorySeries>
+					</categoryDataset>
+					<bar3DPlot>
+						<plot/>
+						<itemLabel/>
+						<categoryAxisFormat>
+							<axisFormat/>
+						</categoryAxisFormat>
+						<valueAxisFormat>
+							<axisFormat/>
+						</valueAxisFormat>
+					</bar3DPlot>
+				</bar3DChart>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="120" splitType="Stretch">
+			<image>
+				<reportElement x="0" y="0" width="160" height="90" uuid="ddc15723-2728-421f-b95e-2df9faf64ce1"/>
+				<imageExpression><![CDATA["relatorio/coffee.jpg"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement style="SubTitle" x="310" y="40" width="262" height="22" uuid="88d4231e-f014-4b0d-b871-1737ba63a1ae"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Grafico geral de conformidades]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="510" y="80" width="100" height="30" uuid="758c1686-8b69-4b87-8039-a8d445dfc7a4"/>
+				<textFieldExpression><![CDATA[$P{dinicio}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="650" y="80" width="100" height="30" uuid="ebd3a2d4-b6f3-40c3-a241-092f6c195506"/>
+				<textFieldExpression><![CDATA[$P{dfinal}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="620" y="80" width="14" height="30" uuid="b5c5d646-820c-4012-ad15-185ec176233f"/>
+				<text><![CDATA[a]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="7" splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band height="18" splitType="Stretch">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="3" width="802" height="1" uuid="fa45a887-615a-4d84-a2d7-8a2219671b3c"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="25" splitType="Stretch">
+			<frame>
+				<reportElement mode="Opaque" x="-20" y="1" width="842" height="24" forecolor="#D0B48E" backcolor="#F2EBDF" uuid="183682bc-d976-4756-83e0-6625a3f98ed1"/>
+				<textField evaluationTime="Report">
+					<reportElement style="Column header" x="770" y="-1" width="40" height="20" forecolor="#736343" uuid="0193f9b3-1559-491a-8580-b6988863b6a1"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="Column header" x="690" y="-1" width="80" height="20" forecolor="#736343" uuid="d00b105e-494b-418b-8ac9-8b1b4824f4f0"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+				</textField>
+				<textField pattern="EEEEE dd MMMMM yyyy">
+					<reportElement style="Column header" x="22" y="1" width="197" height="20" forecolor="#736343" uuid="0616f3fe-0354-456f-8911-ec30ec51a5ae"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>
